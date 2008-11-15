@@ -1,0 +1,56 @@
+# This class provides a really simple way of handling access control. By simply
+# supplying a hash of paths with user privileges for each of them, a powerful
+# ACL system can be created. Wildcards (in this case asterisks) can be used to
+# denote global rules.
+# 
+# Example:
+#   auth = IQ::ACL::Basic.new({
+#     '*'                 => { 'jimbo' => 'r' },
+#     'projects'          => { 'johny' => 'rw' },
+#     'projects/private'  => { 'billy' => 'rw', 'jimbo' => nil },
+#     'projects/public'   => { 'jimbo' => 'rw', '*' => 'r' }
+#   })
+# 
+#   auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'johny', 'projects'         #=> 'rw'
+#   auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'jimbo', 'projects'         #=> 'r'
+#   auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'johny', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'billy', 'projects/private' #=> 'rw'
+#   auth.authorize! 'jimbo', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'guest', 'projects/public'  #=> 'r'
+#   auth.authorize! 'johny', 'projects/public'  #=> 'r'
+#   auth.authorize! 'billy', 'projects/public'  #=> 'rw'
+#   auth.authorize! 'jimbo', 'projects/public'  #=> raises IQ::ACL::AccessDeniedError
+
+class IQ::ACL::Basic
+  
+  # Returns a new instance to be authenticated against.
+  def initialize(permissions)
+    raise ArgumentError, 'Must supply permissions as a hash' unless permissions.is_a?(Hash)
+    @permissions = permissions
+  end
+  
+  # Returns the rights that a user has for a given path. When the user has no
+  # access to the given path, an IQ::ACL::AccessDeniedError is raised.
+  def authorize!(user, path)
+    raise ArgumentError, 'Path must be a string' unless path.is_a?(String)
+    
+    segments = path.split('/')
+    result = until segments.empty?
+      if rights = permissions[segments.join('/')]
+        access = rights[user] || rights['*']
+        break access if access
+      end
+      segments.pop
+    end || (global = permissions['*']) && (global[user] || global['*'])
+    
+    raise IQ::ACL::AccessDeniedError, 'User does not have access to path' unless result
+    result
+  end
+
+  private
+  
+  attr_reader :permissions
+end
