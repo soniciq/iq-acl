@@ -9,13 +9,13 @@ task :default => 'test:unit'
 
 spec = Gem::Specification.new do |s|
   s.name = 'iq-acl'
-  s.version = '0.1.0'
+  s.version = '0.9.0'
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.rdoc_options += ['--title', 'IQ::ACL', '--main', 'README', '--inline-source', '--line-numbers']
   s.extra_rdoc_files = ['README', 'MIT-LICENSE']
-  s.summary = 'Your summary here'
-  s.description = 'Your description here'
+  s.summary = 'A series of classes for implementing access control lists.'
+  s.description = 'This aim of this gem is to provide a series of classes to handle common ACL requirements.'
   s.author = 'Jamie Hill, SonicIQ Ltd'
   s.email = 'jamie@thelucid.com'
   s.homepage = 'http://code.soniciq.com/iq/acl'

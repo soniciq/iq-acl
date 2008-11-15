@@ -5,24 +5,24 @@
 # 
 # Example:
 #   auth = IQ::ACL::Basic.new({
-#     '*'                 => { 'jimbo' => 'r' },
-#     'projects'          => { 'johny' => 'rw' },
-#     'projects/private'  => { 'billy' => 'rw', 'jimbo' => nil },
-#     'projects/public'   => { 'jimbo' => 'rw', '*' => 'r' }
+#     '*'                 => { 'terry' => 'r' },
+#     'projects'          => { 'jonny' => 'rw' },
+#     'projects/private'  => { 'billy' => 'rw', 'terry' => nil },
+#     'projects/public'   => { 'terry' => 'rw', '*' => 'r' }
 #   })
 # 
 #   auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'johny', 'projects'         #=> 'rw'
+#   auth.authorize! 'jonny', 'projects'         #=> 'rw'
 #   auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'jimbo', 'projects'         #=> 'r'
+#   auth.authorize! 'terry', 'projects'         #=> 'r'
 #   auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'johny', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'jonny', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
 #   auth.authorize! 'billy', 'projects/private' #=> 'rw'
-#   auth.authorize! 'jimbo', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
 #   auth.authorize! 'guest', 'projects/public'  #=> 'r'
-#   auth.authorize! 'johny', 'projects/public'  #=> 'r'
+#   auth.authorize! 'jonny', 'projects/public'  #=> 'r'
 #   auth.authorize! 'billy', 'projects/public'  #=> 'rw'
-#   auth.authorize! 'jimbo', 'projects/public'  #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'terry', 'projects/public'  #=> raises IQ::ACL::AccessDeniedError
 
 class IQ::ACL::Basic
   
