@@ -11,18 +11,18 @@
 #     'projects/public'   => { 'terry' => 'rw', '*' => 'r' }
 #   })
 # 
-# auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-# auth.authorize! 'jonny', 'projects'         #=> 'rw'
-# auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-# auth.authorize! 'terry', 'projects'         #=> 'r'
-# auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-# auth.authorize! 'jonny', 'projects/private' #=> 'rw'
-# auth.authorize! 'billy', 'projects/private' #=> 'rw'
-# auth.authorize! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-# auth.authorize! 'guest', 'projects/public'  #=> 'r'
-# auth.authorize! 'jonny', 'projects/public'  #=> 'r'
-# auth.authorize! 'billy', 'projects/public'  #=> 'r'
-# auth.authorize! 'terry', 'projects/public'  #=> 'rw
+#   auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'jonny', 'projects'         #=> 'rw'
+#   auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'terry', 'projects'         #=> 'r'
+#   auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'jonny', 'projects/private' #=> 'rw'
+#   auth.authorize! 'billy', 'projects/private' #=> 'rw'
+#   auth.authorize! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+#   auth.authorize! 'guest', 'projects/public'  #=> 'r'
+#   auth.authorize! 'jonny', 'projects/public'  #=> 'r'
+#   auth.authorize! 'billy', 'projects/public'  #=> 'r'
+#   auth.authorize! 'terry', 'projects/public'  #=> 'rw
 
 class IQ::ACL::Basic
   

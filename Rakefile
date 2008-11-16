@@ -9,7 +9,7 @@ task :default => 'test:unit'
 
 spec = Gem::Specification.new do |s|
   s.name = 'iq-acl'
-  s.version = '0.9.1'
+  s.version = '0.9.2'
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.rdoc_options += ['--title', 'IQ::ACL', '--main', 'README', '--inline-source', '--line-numbers']
