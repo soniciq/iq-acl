@@ -51,6 +51,38 @@ module IQ::Tests::ACL::Unit::Basic
     def test_should_raise_access_denied_error_when_no_match
       assert_raise(IQ::ACL::AccessDeniedError) { Factory.new_basic({}).authorize!('the user', 'will/not/match') }
     end
+    
+    def test_should_raise_when_user_access_explicitly_set_to_nil_for_given_path_even_when_a_parent_privilege_set
+      instance = Factory.new_basic({})
+      instance.instance_variable_set(
+        '@permissions', { 'the' => { 'the user' => 'ok' }, 'the/path' => { 'the user' => nil } }
+      )
+      assert_raise(IQ::ACL::AccessDeniedError) { instance.authorize!('the user', 'the/path') }
+    end
+    
+    def test_should_raise_when_user_access_explicitly_set_to_nil_for_given_path_even_when_root_global_set
+      instance = Factory.new_basic({})
+      instance.instance_variable_set(
+        '@permissions', { '*' => { 'the user' => 'ok' }, 'the/path' => { 'the user' => nil } }
+      )
+      assert_raise(IQ::ACL::AccessDeniedError) { instance.authorize!('the user', 'the/path') }
+    end
+    
+    def test_should_raise_when_user_access_not_known_but_global_set_to_nil_for_given_path_even_when_parent_privilege_set
+      instance = Factory.new_basic({})
+      instance.instance_variable_set(
+        '@permissions', { 'the' => { 'the user' => 'ok' }, 'the/path' => { 'the user' => nil } }
+      )
+      assert_raise(IQ::ACL::AccessDeniedError) { instance.authorize!('the user', 'the/path') }
+    end
+    
+    def test_should_raise_when_user_access_not_known_but_global_set_to_nil_for_given_path_even_when_root_global_set
+      instance = Factory.new_basic({})
+      instance.instance_variable_set(
+        '@permissions', { '*' => { 'the user' => 'ok' }, 'the/path' => { '*' => nil } }
+      )
+      assert_raise(IQ::ACL::AccessDeniedError) { instance.authorize!('the user', 'the/path') }
+    end
 
     def test_should_return_result_of_direct_match_in_permissions_hash_with_path_and_user_when_available
       instance = Factory.new_basic({})

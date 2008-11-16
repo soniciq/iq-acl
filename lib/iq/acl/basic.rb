@@ -11,18 +11,18 @@
 #     'projects/public'   => { 'terry' => 'rw', '*' => 'r' }
 #   })
 # 
-#   auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'jonny', 'projects'         #=> 'rw'
-#   auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'terry', 'projects'         #=> 'r'
-#   auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'jonny', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'billy', 'projects/private' #=> 'rw'
-#   auth.authorize! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-#   auth.authorize! 'guest', 'projects/public'  #=> 'r'
-#   auth.authorize! 'jonny', 'projects/public'  #=> 'r'
-#   auth.authorize! 'billy', 'projects/public'  #=> 'rw'
-#   auth.authorize! 'terry', 'projects/public'  #=> raises IQ::ACL::AccessDeniedError
+# auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+# auth.authorize! 'jonny', 'projects'         #=> 'rw'
+# auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+# auth.authorize! 'terry', 'projects'         #=> 'r'
+# auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+# auth.authorize! 'jonny', 'projects/private' #=> 'rw'
+# auth.authorize! 'billy', 'projects/private' #=> 'rw'
+# auth.authorize! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+# auth.authorize! 'guest', 'projects/public'  #=> 'r'
+# auth.authorize! 'jonny', 'projects/public'  #=> 'r'
+# auth.authorize! 'billy', 'projects/public'  #=> 'r'
+# auth.authorize! 'terry', 'projects/public'  #=> 'rw
 
 class IQ::ACL::Basic
   
@@ -38,19 +38,21 @@ class IQ::ACL::Basic
     raise ArgumentError, 'Path must be a string' unless path.is_a?(String)
     
     segments = path.split('/')
-    result = until segments.empty?
+    until segments.empty?
       if rights = permissions[segments.join('/')]
         access = rights[user] || rights['*']
+        access_denied! if (rights.has_key?(user) || rights.has_key?('*')) && access.nil?
         break access if access
       end
       segments.pop
-    end || (global = permissions['*']) && (global[user] || global['*'])
-    
-    raise IQ::ACL::AccessDeniedError, 'User does not have access to path' unless result
-    result
+    end || (global = permissions['*']) && (global[user] || global['*']) || access_denied!
   end
 
   private
   
   attr_reader :permissions
+  
+  def access_denied!
+    raise IQ::ACL::AccessDeniedError, 'User does not have access to path'
+  end
 end
