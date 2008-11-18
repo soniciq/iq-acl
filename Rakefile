@@ -3,13 +3,14 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 require 'rcov/rcovtask'
 require 'rake/gempackagetask'
+require File.join(File.dirname(__FILE__), 'lib', 'iq', 'acl')
 
 desc 'Default: run unit tests.'
 task :default => 'test:unit'
 
 spec = Gem::Specification.new do |s|
   s.name = 'iq-acl'
-  s.version = '0.9.2'
+  s.version = IQ::ACL.version
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.rdoc_options += ['--title', 'IQ::ACL', '--main', 'README', '--inline-source', '--line-numbers']

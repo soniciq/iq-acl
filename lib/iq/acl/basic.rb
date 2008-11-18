@@ -23,6 +23,16 @@
 #   auth.authorize! 'jonny', 'projects/public'  #=> 'r'
 #   auth.authorize! 'billy', 'projects/public'  #=> 'r'
 #   auth.authorize! 'terry', 'projects/public'  #=> 'rw
+# 
+# A block may be given to <tt>authorize!</tt> that should return true if
+# the yielded rights are adequate for the user, for example the following
+# will raise an IQ::ACL::AccessDeniedError as 'terry' does not have write access
+# to the 'projects' path. If 'terry' had write access to the 'projects'
+# path, the exception would not be thrown.
+# 
+#   auth.authorize! 'terry', 'projects' do |rights|
+#     rights.include?('w')
+#   end
 
 class IQ::ACL::Basic
   
@@ -33,12 +43,14 @@ class IQ::ACL::Basic
   end
   
   # Returns the rights that a user has for a given path. When the user has no
-  # access to the given path, an IQ::ACL::AccessDeniedError is raised.
+  # access to the given path, an IQ::ACL::AccessDeniedError is raised. When a
+  # block is given the user rights are yielded as the block parameter and the
+  # block is expected to return true when the rights are sufficient.
   def authorize!(user, path)
     raise ArgumentError, 'Path must be a string' unless path.is_a?(String)
     
     segments = path.split('/')
-    until segments.empty?
+    rights = until segments.empty?
       if rights = permissions[segments.join('/')]
         access = rights[user] || rights['*']
         access_denied! if (rights.has_key?(user) || rights.has_key?('*')) && access.nil?
@@ -46,6 +58,9 @@ class IQ::ACL::Basic
       end
       segments.pop
     end || (global = permissions['*']) && (global[user] || global['*']) || access_denied!
+    
+    access_denied! if block_given? && (yield(rights) != true)
+    rights
   end
 
   private

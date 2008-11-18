@@ -137,6 +137,52 @@ module IQ::Tests::ACL::Unit::Basic
       instance.instance_variable_set '@permissions', { '*' => { '*' => 'the access' }, 'other/path' => {} }
       assert_equal 'the access', instance.authorize!('the user', 'the/path')
     end
+    
+    # block handling
+    
+    def test_should_yield_the_user_rights_when_block_given
+      instance = Factory.new_basic({})
+      instance.instance_variable_set '@permissions', { 'the/path' => { 'the user' => 'the access' } }
+      the_rights = nil
+      instance.authorize!('the user', 'the/path') do |rights|
+        the_rights = rights
+        true
+      end
+      assert_equal 'the access', the_rights
+    end
+    
+    def test_should_raise_access_denied_error_if_block_evaluates_to_false
+      instance = Factory.new_basic({})
+      instance.instance_variable_set '@permissions', { 'the/path' => { 'the user' => 'the access' } }
+
+      assert_raise(IQ::ACL::AccessDeniedError) do
+        instance.authorize!('the user', 'the/path') do |rights|
+          false
+        end
+      end
+    end
+    
+    def test_should_raise_access_denied_error_if_block_evaluates_to_anything_other_than_true
+      instance = Factory.new_basic({})
+      instance.instance_variable_set '@permissions', { 'the/path' => { 'the user' => 'the access' } }
+
+      assert_raise(IQ::ACL::AccessDeniedError) do
+        instance.authorize!('the user', 'the/path') do |rights|
+          'not true'
+        end
+      end
+    end
+    
+    def test_should_not_raise_access_denied_error_when_block_evaluates_to_true
+      instance = Factory.new_basic({})
+      instance.instance_variable_set '@permissions', { 'the/path' => { 'the user' => 'the access' } }
+
+      assert_nothing_raised(IQ::ACL::AccessDeniedError) do
+        instance.authorize!('the user', 'the/path') do |rights|
+          true
+        end
+      end
+    end
   end
 
 end
