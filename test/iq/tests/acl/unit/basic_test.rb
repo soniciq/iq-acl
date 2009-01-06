@@ -89,6 +89,12 @@ module IQ::Tests::ACL::Unit::Basic
       instance.instance_variable_set '@permissions', { 'the/path' => { 'the user' => 'the access' } }
       assert_equal 'the access', instance.authorize!('the user', 'the/path')
     end
+    
+    def test_should_return_result_of_direct_match_in_permissions_hash_with_path_and_user_when_available_special_case
+      instance = Factory.new_basic({})
+      instance.instance_variable_set '@permissions', { 'projects/rails-site.com' => { 'rails_site' => 'rw' } }
+      assert_equal 'rw', instance.authorize!('rails_site', 'projects/rails-site.com')
+    end
 
     def test_should_return_result_of_direct_match_in_permissions_hash_with_path_and_star_user_when_user_not_found
       instance = Factory.new_basic({})

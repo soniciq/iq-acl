@@ -26,5 +26,34 @@ module IQ::Tests::ACL::Functional::Basic
       # Your assertion goes here
     end
   end
+  
+  class AuthorisationBasedOnIssueWithCurrentIqGitTest < Test::Unit::TestCase
+    def test_should_work
+      authenticator = IQ::ACL::Basic.new({
+        "projects/thelucid.com" => { 
+          "miguel" => nil,
+          "andy" => nil
+        }, 
+        "projects" => {
+          "miguel" => "rw",
+          "andy" => "rw"
+        }, 
+        "gems" => {
+          "miguel" => "r",
+          "andy" => "rw"
+        }, 
+        "projects/rails-site.com" => {
+          "rails_site" => "rw",
+          "andy" => "rw"
+        }, 
+        "*" => {
+          "jamie"=>"rw"
+        }
+      })
+      assert(authenticator.authorize!('rails_site', 'projects/rails-site.com') do |rights|
+        rights.include?('r')
+      end)
+    end
+  end
 
 end
