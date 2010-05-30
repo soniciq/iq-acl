@@ -3,7 +3,7 @@
 # ACL system can be created. Wildcards (in this case asterisks) can be used to
 # denote global rules.
 # 
-# Example:
+# @example
 #   auth = IQ::ACL::Basic.new({
 #     '*'                 => { 'terry' => 'r' },
 #     'projects'          => { 'jonny' => 'rw' },
@@ -24,19 +24,22 @@
 #   auth.authorize! 'billy', 'projects/public'  #=> 'r'
 #   auth.authorize! 'terry', 'projects/public'  #=> 'rw
 # 
-# A block may be given to <tt>authorize!</tt> that should return true if
-# the yielded rights are adequate for the user, for example the following
-# will raise an IQ::ACL::AccessDeniedError as 'terry' does not have write access
-# to the 'projects' path. If 'terry' had write access to the 'projects'
-# path, the exception would not be thrown.
+# A block may be given to authorize! that should return true if the yielded
+# rights are adequate for the user, for example the following will raise an
+# IQ::ACL::AccessDeniedError as 'terry' does not have write access to the
+# 'projects' path. If 'terry' had write access to the 'projects' path, the
+# exception would not be thrown.
 # 
+# @example
 #   auth.authorize! 'terry', 'projects' do |rights|
 #     rights.include?('w')
 #   end
-
+#
 class IQ::ACL::Basic
   
   # Returns a new instance to be authenticated against.
+  # 
+  # @param [Hash]
   def initialize(permissions)
     raise ArgumentError, 'Must supply permissions as a hash' unless permissions.is_a?(Hash)
     @permissions = permissions
@@ -46,6 +49,11 @@ class IQ::ACL::Basic
   # access to the given path, an IQ::ACL::AccessDeniedError is raised. When a
   # block is given the user rights are yielded as the block parameter and the
   # block is expected to return true when the rights are sufficient.
+  # 
+  # @param [String] user
+  # @param [String] path
+  # 
+  # @return [String] the right for the given user
   def authorize!(user, path)
     raise ArgumentError, 'Path must be a string' unless path.is_a?(String)
     

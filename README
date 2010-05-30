@@ -1,7 +1,0 @@
-= IQ::ACL
-
-=== Summary
-A series of classes for implementing access control lists.
-
-=== Description
-This aim of this gem is to provide a series of classes to handle common ACL requirements. Currently provided is the IQ::ACL::Basic class which although super simple, is also extremely powerful. Read more about usage on the IQ::ACL::Basic page.

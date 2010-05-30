@@ -1,4 +1,6 @@
 .DS_Store
-doc
-cov
-pkg
+/doc
+/cov
+/pkg
+/.document
+/.yardoc

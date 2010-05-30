@@ -1,0 +1,51 @@
+= IQ::ACL
+
+This aim of this gem is to provide a series of classes to handle common ACL requirements. Currently provided is the IQ::ACL::Basic class which although super simple, is also extremely powerful. Read more about usage on the IQ::ACL::Basic page.
+
+== Install
+  gem install iq-acl
+  
+== Usage
+  auth = IQ::ACL::Basic.new({
+    '*'                 => { 'terry' => 'r' },
+    'projects'          => { 'jonny' => 'rw' },
+    'projects/private'  => { 'billy' => 'rw', 'terry' => nil },
+    'projects/public'   => { 'terry' => 'rw', '*' => 'r' }
+  })
+
+  auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+  auth.authorize! 'jonny', 'projects'         #=> 'rw'
+  auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+  auth.authorize! 'terry', 'projects'         #=> 'r'
+  auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+  auth.authorize! 'jonny', 'projects/private' #=> 'rw'
+  auth.authorize! 'billy', 'projects/private' #=> 'rw'
+  auth.authorize! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+  auth.authorize! 'guest', 'projects/public'  #=> 'r'
+  auth.authorize! 'jonny', 'projects/public'  #=> 'r'
+  auth.authorize! 'billy', 'projects/public'  #=> 'r'
+  auth.authorize! 'terry', 'projects/public'  #=> 'rw
+
+  # A block may be given to <tt>authorize!</tt> that should return true if
+  # the yielded rights are adequate for the user, for example the following
+  # will raise an IQ::ACL::AccessDeniedError as 'terry' does not have write access
+  # to the 'projects' path. If 'terry' had write access to the 'projects'
+  # path, the exception would not be thrown.
+
+  auth.authorize! 'terry', 'projects' do |rights|
+    rights.include?('w')
+  end
+
+== Note on Patches/Pull Requests
+ 
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Copyright
+
+Copyright (c) 2010 Jamie Hill, SonicIQ Ltd.. See LICENSE for details.
