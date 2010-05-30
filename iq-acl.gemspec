@@ -18,10 +18,16 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".gitignore",
+     "LICENSE",
+     "README.rdoc",
      "Rakefile",
+     "VERSION",
+     "iq-acl.gemspec",
      "lib/iq-acl.rb",
      "lib/iq/acl.rb",
-     "lib/iq/acl/basic.rb"
+     "lib/iq/acl/basic.rb",
+     "test/helper.rb",
+     "test/iq/acl_test.rb"
   ]
   s.homepage = %q{http://github.com/iq/iq-acl}
   s.rdoc_options = ["--charset=UTF-8"]
