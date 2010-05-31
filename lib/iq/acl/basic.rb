@@ -4,12 +4,17 @@
 # denote global rules.
 # 
 # @example
+#   # Create an instance of the basic class, supplying rights as a hash, note
+#   # that asterisks are used as wildcards.
 #   auth = IQ::ACL::Basic.new({
 #     '*'                 => { 'terry' => 'r' },
 #     'projects'          => { 'jonny' => 'rw' },
 #     'projects/private'  => { 'billy' => 'rw', 'terry' => nil },
 #     'projects/public'   => { 'terry' => 'rw', '*' => 'r' }
 #   })
+#   
+#   # You could alternatively read rights from a YAML file
+#   auth = IQ::ACL::Basic.new(YAML.load_file('rights.yml'))
 # 
 #   auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
 #   auth.authorize! 'jonny', 'projects'         #=> 'rw'
@@ -24,13 +29,12 @@
 #   auth.authorize! 'billy', 'projects/public'  #=> 'r'
 #   auth.authorize! 'terry', 'projects/public'  #=> 'rw
 # 
-# A block may be given to authorize! that should return true if the yielded
-# rights are adequate for the user, for example the following will raise an
-# IQ::ACL::AccessDeniedError as 'terry' does not have write access to the
-# 'projects' path. If 'terry' had write access to the 'projects' path, the
-# exception would not be thrown.
+#   # A block may be given to authorize! that should return true if the yielded
+#   # rights are adequate for the user, for example the following will raise an
+#   # IQ::ACL::AccessDeniedError as 'terry' does not have write access to the
+#   # 'projects' path. If 'terry' had write access to the 'projects' path, the
+#   # exception would not be thrown.
 # 
-# @example
 #   auth.authorize! 'terry', 'projects' do |rights|
 #     rights.include?('w')
 #   end
