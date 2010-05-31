@@ -8,7 +8,7 @@ begin
     gem.summary = %Q{Super simple access control.}
     gem.description = %Q{IQ::ACL provides a super simple way of implementing access control.}
     gem.email = "jamie@soniciq.com"
-    gem.homepage = "http://github.com/iq/iq-acl"
+    gem.homepage = "http://github.com/soniciq/iq-acl"
     gem.authors = ["Jamie Hill, SonicIQ Ltd."]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_development_dependency "yard", ">= 0"
