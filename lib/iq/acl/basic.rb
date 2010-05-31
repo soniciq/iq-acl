@@ -13,7 +13,7 @@
 #     'projects/public'   => { 'terry' => 'rw', '*' => 'r' }
 #   })
 #   
-#   # You could alternatively read rights from a YAML file
+#   # You could alternatively read rights from a YAML file.
 #   auth = IQ::ACL::Basic.new(YAML.load_file('rights.yml'))
 # 
 #   auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
