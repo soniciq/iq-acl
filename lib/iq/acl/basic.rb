@@ -47,6 +47,7 @@
 # 
 #   user = User.find_by_email('jamie@example.com')
 #   auth = IQ::ACL::Basic.new('projects/*' => { user => user.roles })
+# 
 #   auth.authenticate!(user, 'projects/some-project') do |roles|
 #     roles.find_by_name('project_editor')
 #   end
