@@ -40,6 +40,18 @@ path, the exception would not be thrown.
   auth.authenticate! 'terry', 'projects' do |rights|
     rights.include?('w')
   end
+  
+In the previous examples, strings are used to identify the user, however
+user may be any object. This becomes quite powerful as you could use the
+objects returned from an ORM such as ActiveRecord. Also the rights in the
+previous examples were strings, however these may be of any type also,
+again allowing powerful solutions to be built e.g.
+ 
+ user = User.find_by_email('jamie@example.com')
+ auth = IQ::ACL::Basic.new('projects/*' => { user => user.roles })
+ auth.authenticate!(user, 'projects/some-project') do |roles|
+   roles.find_by_name('project_editor')
+ end
 
 == Note on Patches/Pull Requests
  
