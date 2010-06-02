@@ -54,6 +54,13 @@ again allowing powerful solutions to be built e.g.
    roles.find_by_name('project_editor')
  end
 
+== Documentation
+
+Documentation is handled with YARD[http://github.com/lsegal/yard]. You can
+generate the documentation by running:
+
+ rake yard
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
