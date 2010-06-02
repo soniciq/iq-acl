@@ -18,26 +18,26 @@ This aim of this gem is to provide a series of classes to handle common ACL requ
   # You could alternatively read rights from a YAML file
   auth = IQ::ACL::Basic.new(YAML.load_file('rights.yml'))
 
-  auth.authorize! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-  auth.authorize! 'jonny', 'projects'         #=> 'rw'
-  auth.authorize! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
-  auth.authorize! 'terry', 'projects'         #=> 'r'
-  auth.authorize! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-  auth.authorize! 'jonny', 'projects/private' #=> 'rw'
-  auth.authorize! 'billy', 'projects/private' #=> 'rw'
-  auth.authorize! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
-  auth.authorize! 'guest', 'projects/public'  #=> 'r'
-  auth.authorize! 'jonny', 'projects/public'  #=> 'r'
-  auth.authorize! 'billy', 'projects/public'  #=> 'r'
-  auth.authorize! 'terry', 'projects/public'  #=> 'rw
+  auth.authenticate! 'guest', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+  auth.authenticate! 'jonny', 'projects'         #=> 'rw'
+  auth.authenticate! 'billy', 'projects'         #=> raises IQ::ACL::AccessDeniedError
+  auth.authenticate! 'terry', 'projects'         #=> 'r'
+  auth.authenticate! 'guest', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+  auth.authenticate! 'jonny', 'projects/private' #=> 'rw'
+  auth.authenticate! 'billy', 'projects/private' #=> 'rw'
+  auth.authenticate! 'terry', 'projects/private' #=> raises IQ::ACL::AccessDeniedError
+  auth.authenticate! 'guest', 'projects/public'  #=> 'r'
+  auth.authenticate! 'jonny', 'projects/public'  #=> 'r'
+  auth.authenticate! 'billy', 'projects/public'  #=> 'r'
+  auth.authenticate! 'terry', 'projects/public'  #=> 'rw
 
-A block may be given to <tt>authorize!</tt> that should return true if
+A block may be given to <tt>authenticate!</tt> that should return true if
 the yielded rights are adequate for the user, for example the following
 will raise an IQ::ACL::AccessDeniedError as 'terry' does not have write access
 to the 'projects' path. If 'terry' had write access to the 'projects'
 path, the exception would not be thrown.
 
-  auth.authorize! 'terry', 'projects' do |rights|
+  auth.authenticate! 'terry', 'projects' do |rights|
     rights.include?('w')
   end
 
